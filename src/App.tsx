@@ -3,12 +3,32 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import Index from './pages/Index'
-import NotFound from './pages/NotFound'
 import Layout from './components/Layout'
 
-// ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
-// AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
+// Pages
+import Login from './pages/auth/Login'
+import NotFound from './pages/NotFound'
+
+// Layouts
+import AdminLayout from './components/layout/AdminLayout'
+import EmployeeLayout from './components/layout/EmployeeLayout'
+
+// Super Admin Pages
+import SuperAdminDashboard from './pages/super-admin/Companies' // Reusing Companies as Dashboard for now as per spec implies Companies is main
+import Companies from './pages/super-admin/Companies'
+import Content from './pages/super-admin/Content'
+import Clinical from './pages/super-admin/Clinical'
+
+// Company Admin Pages
+import CompanyDashboard from './pages/company-admin/Analytics'
+import Sectors from './pages/company-admin/Sectors'
+import Employees from './pages/company-admin/Employees'
+
+// Employee Pages
+import EmployeeDashboard from './pages/employee/Dashboard'
+import Questionnaire from './pages/employee/Questionnaire'
+import Library from './pages/employee/Library'
+import { LGPDModal } from './components/auth/LGPDModal'
 
 const App = () => (
   <BrowserRouter
@@ -17,12 +37,35 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <LGPDModal />
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES MUST BE ADDED HERE */}
+          <Route path="/" element={<Login />} />
+
+          {/* Super Admin Routes */}
+          <Route path="/super-admin" element={<AdminLayout />}>
+            <Route index element={<SuperAdminDashboard />} />
+            <Route path="companies" element={<Companies />} />
+            <Route path="content" element={<Content />} />
+            <Route path="clinical" element={<Clinical />} />
+          </Route>
+
+          {/* Company Admin Routes */}
+          <Route path="/company-admin" element={<AdminLayout />}>
+            <Route index element={<CompanyDashboard />} />
+            <Route path="sectors" element={<Sectors />} />
+            <Route path="employees" element={<Employees />} />
+          </Route>
+
+          {/* Employee Routes */}
+          <Route path="/employee" element={<EmployeeLayout />}>
+            <Route index element={<EmployeeDashboard />} />
+            <Route path="questionnaire" element={<Questionnaire />} />
+            <Route path="library" element={<Library />} />
+          </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </TooltipProvider>
   </BrowserRouter>
