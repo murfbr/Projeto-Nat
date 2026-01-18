@@ -6,6 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import Layout from './components/Layout'
 
 // Pages
+import Index from './pages/Index'
 import Login from './pages/auth/Login'
 import NotFound from './pages/NotFound'
 
@@ -40,7 +41,9 @@ const App = () => (
       <LGPDModal />
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Login />} />
+          {/* Public Routes */}
+          <Route path="/" element={<Index />} />
+          <Route path="/login" element={<Login />} />
 
           {/* Super Admin Routes */}
           <Route path="/super-admin" element={<AdminLayout />}>
