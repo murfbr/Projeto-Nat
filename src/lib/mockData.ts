@@ -4,6 +4,8 @@ export interface Company {
   cnpj: string
   active: boolean
   createdAt: string
+  industry?: string
+  email?: string
 }
 
 export interface Sector {
@@ -46,6 +48,8 @@ export const companies: Company[] = [
     cnpj: '12.345.678/0001-90',
     active: true,
     createdAt: '2023-01-15',
+    industry: 'Seguros',
+    email: 'contato@sulamerica.com.br',
   },
   {
     id: 'c2',
@@ -53,6 +57,8 @@ export const companies: Company[] = [
     cnpj: '98.765.432/0001-12',
     active: true,
     createdAt: '2023-03-20',
+    industry: 'Tecnologia',
+    email: 'admin@techsolutions.com',
   },
   {
     id: 'c3',
@@ -60,6 +66,8 @@ export const companies: Company[] = [
     cnpj: '45.123.789/0001-56',
     active: false,
     createdAt: '2023-05-10',
+    industry: 'Varejo',
+    email: 'rh@grupovarejo.com.br',
   },
 ]
 
