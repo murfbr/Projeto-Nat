@@ -15,7 +15,7 @@ import AdminLayout from './components/layout/AdminLayout'
 import EmployeeLayout from './components/layout/EmployeeLayout'
 
 // Super Admin Pages
-import SuperAdminDashboard from './pages/super-admin/Companies' // Reusing Companies as Dashboard for now as per spec implies Companies is main
+import SuperAdminDashboard from './pages/super-admin/Dashboard'
 import Companies from './pages/super-admin/Companies'
 import Content from './pages/super-admin/Content'
 import Clinical from './pages/super-admin/Clinical'

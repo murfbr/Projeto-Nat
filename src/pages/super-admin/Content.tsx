@@ -1,24 +1,84 @@
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { libraryContent } from '@/lib/mockData'
-import { Plus, PlayCircle, FileText, Upload } from 'lucide-react'
+import { libraryContent, Content as ContentType } from '@/lib/mockData'
+import {
+  Plus,
+  PlayCircle,
+  FileText,
+  Upload,
+  Eye,
+  EyeOff,
+  Trash2,
+  Edit,
+} from 'lucide-react'
+import { ContentDialog } from '@/components/super-admin/ContentDialog'
+import { toast } from 'sonner'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 
 export default function Content() {
+  const [contents, setContents] = useState<ContentType[]>(libraryContent)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingContent, setEditingContent] = useState<ContentType | null>(null)
+
+  const handleSaveContent = (data: any) => {
+    if (editingContent) {
+      const updated = contents.map((c) =>
+        c.id === editingContent.id
+          ? { ...c, ...data, thumbnailUrl: c.thumbnailUrl } // Keep existing thumb
+          : c,
+      )
+      setContents(updated)
+      setEditingContent(null)
+      toast.success('Conteúdo atualizado!')
+    } else {
+      const newContent: ContentType = {
+        id: `l${Date.now()}`,
+        ...data,
+        thumbnailUrl: `https://img.usecurling.com/p/400/225?q=${data.category}&color=blue`,
+        date: new Date().toISOString().split('T')[0],
+      }
+      setContents([...contents, newContent])
+      toast.success('Conteúdo criado!')
+    }
+  }
+
+  const handleDelete = (id: string) => {
+    setContents(contents.filter((c) => c.id !== id))
+    toast.success('Conteúdo removido.')
+  }
+
+  const toggleVisibility = (id: string) => {
+    setContents(
+      contents.map((c) => (c.id === id ? { ...c, visible: !c.visible } : c)),
+    )
+    toast.info('Visibilidade alterada.')
+  }
+
+  const openEdit = (content: ContentType) => {
+    setEditingContent(content)
+    setIsModalOpen(true)
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl font-bold tracking-tight font-heading text-primary">
-          Biblioteca de Saúde
+          Gestão de Conteúdo
         </h1>
-        <Button>
+        <Button
+          onClick={() => {
+            setEditingContent(null)
+            setIsModalOpen(true)
+          }}
+        >
           <Plus className="mr-2 h-4 w-4" /> Novo Conteúdo
         </Button>
       </div>
@@ -26,45 +86,83 @@ export default function Content() {
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle>Conteúdo Publicado</CardTitle>
+            <CardTitle>Biblioteca Digital</CardTitle>
             <CardDescription>
-              Gerencie vídeos e artigos disponíveis para os colaboradores.
+              Gerencie a visibilidade e edição dos materiais educativos.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 sm:grid-cols-2">
-              {libraryContent.map((item) => (
+              {contents.map((item) => (
                 <Card
                   key={item.id}
-                  className="overflow-hidden border-0 shadow-sm transition-all hover:shadow-md"
+                  className={cn(
+                    'overflow-hidden border transition-all',
+                    !item.visible && 'opacity-75 bg-slate-50',
+                  )}
                 >
-                  <div className="aspect-video w-full bg-slate-100 relative">
+                  <div
+                    className="aspect-video w-full bg-slate-100 relative group cursor-pointer"
+                    onClick={() => openEdit(item)}
+                  >
                     <img
                       src={item.thumbnailUrl}
                       alt={item.title}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover transition-transform group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity hover:opacity-100">
-                      {item.type === 'video' ? (
-                        <PlayCircle className="h-12 w-12 text-white" />
-                      ) : (
-                        <FileText className="h-12 w-12 text-white" />
-                      )}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
+                      <Edit className="h-8 w-8 text-white drop-shadow-md" />
                     </div>
+                    {!item.visible && (
+                      <div className="absolute inset-0 bg-slate-900/60 flex items-center justify-center">
+                        <Badge variant="secondary" className="text-xs">
+                          Oculto
+                        </Badge>
+                      </div>
+                    )}
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold line-clamp-1">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-semibold line-clamp-1">
+                        {item.title}
+                      </h3>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={() => toggleVisibility(item.id)}
+                        >
+                          {item.visible ? (
+                            <Eye className="h-4 w-4 text-blue-500" />
+                          ) : (
+                            <EyeOff className="h-4 w-4 text-slate-400" />
+                          )}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={() => handleDelete(item.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mt-1 mb-3">
                       {item.description}
                     </p>
-                    <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                      <span className="rounded-full bg-slate-100 px-2 py-0.5">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <Badge variant="outline" className="font-normal">
                         {item.category}
-                      </span>
-                      <span>
-                        {item.type === 'video'
-                          ? item.duration
-                          : '5 min leitura'}
+                      </Badge>
+                      <span className="flex items-center gap-1">
+                        {item.type === 'video' ? (
+                          <PlayCircle className="h-3 w-3" />
+                        ) : (
+                          <FileText className="h-3 w-3" />
+                        )}
+                        {item.type === 'video' ? item.duration : 'Leitura'}
                       </span>
                     </div>
                   </div>
@@ -79,7 +177,7 @@ export default function Content() {
             <CardTitle>Upload Rápido</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 py-10 hover:bg-slate-100">
+            <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 py-10 hover:bg-slate-100 transition-colors">
               <div className="mb-4 rounded-full bg-white p-3 shadow-sm">
                 <Upload className="h-6 w-6 text-primary" />
               </div>
@@ -91,29 +189,19 @@ export default function Content() {
                 Selecionar Arquivo
               </Button>
             </div>
-
-            <div className="mt-6 space-y-4">
-              <h4 className="text-sm font-medium">Rascunhos Recentes</h4>
-              <div className="flex items-center justify-between rounded-md border p-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-yellow-100">
-                    <FileText className="h-4 w-4 text-yellow-700" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Dicas de Nutrição</p>
-                    <p className="text-xs text-muted-foreground">
-                      Editado há 2h
-                    </p>
-                  </div>
-                </div>
-                <Button variant="ghost" size="sm">
-                  Editar
-                </Button>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
+
+      <ContentDialog
+        open={isModalOpen}
+        onOpenChange={(open) => {
+          setIsModalOpen(open)
+          if (!open) setEditingContent(null)
+        }}
+        contentToEdit={editingContent}
+        onSubmit={handleSaveContent}
+      />
     </div>
   )
 }

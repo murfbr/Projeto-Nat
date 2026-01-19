@@ -20,8 +20,10 @@ export interface Employee {
   name: string
   email: string
   cpf: string
+  role: string
   sectorId: string
   status: 'active' | 'inactive'
+  photoUrl?: string
 }
 
 export interface Content {
@@ -33,12 +35,7 @@ export interface Content {
   duration?: string
   date: string
   category: string
-}
-
-export interface AnalyticsData {
-  riskFactor: string
-  percentage: number
-  color: string
+  visible: boolean
 }
 
 export const companies: Company[] = [
@@ -74,8 +71,41 @@ export const companies: Company[] = [
 export const sectors: Sector[] = [
   { id: 's1', name: 'Financeiro', companyId: 'c1', employeeCount: 12 },
   { id: 's2', name: 'Operacional', companyId: 'c1', employeeCount: 45 },
-  { id: 's3', name: 'RH', companyId: 'c1', employeeCount: 4 }, // < 5 for anon guard test
+  { id: 's3', name: 'RH', companyId: 'c1', employeeCount: 4 },
   { id: 's4', name: 'Tecnologia', companyId: 'c2', employeeCount: 20 },
+]
+
+export const employees: Employee[] = [
+  {
+    id: 'e1',
+    name: 'Carlos Mendes',
+    email: 'carlos@sulamerica.com.br',
+    cpf: '123.456.789-00',
+    role: 'Analista',
+    sectorId: 's1',
+    status: 'active',
+    photoUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=e1',
+  },
+  {
+    id: 'e2',
+    name: 'Ana Souza',
+    email: 'ana@sulamerica.com.br',
+    cpf: '234.567.890-11',
+    role: 'Gerente',
+    sectorId: 's2',
+    status: 'active',
+    photoUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=e2',
+  },
+  {
+    id: 'e3',
+    name: 'Roberto Lima',
+    email: 'roberto@sulamerica.com.br',
+    cpf: '345.678.901-22',
+    role: 'Assistente',
+    sectorId: 's3',
+    status: 'inactive',
+    photoUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=e3',
+  },
 ]
 
 export const libraryContent: Content[] = [
@@ -90,6 +120,7 @@ export const libraryContent: Content[] = [
     duration: '12:45',
     date: '2023-10-01',
     category: 'Saúde Mental',
+    visible: true,
   },
   {
     id: 'l2',
@@ -101,6 +132,7 @@ export const libraryContent: Content[] = [
       'https://img.usecurling.com/p/400/225?q=home%20office%20setup&color=white',
     date: '2023-10-05',
     category: 'Saúde Física',
+    visible: true,
   },
   {
     id: 'l3',
@@ -113,6 +145,7 @@ export const libraryContent: Content[] = [
     duration: '05:30',
     date: '2023-10-10',
     category: 'Bem-estar',
+    visible: false,
   },
 ]
 

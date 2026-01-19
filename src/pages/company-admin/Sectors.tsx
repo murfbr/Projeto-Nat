@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -14,17 +15,65 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { sectors } from '@/lib/mockData'
-import { Plus, Users } from 'lucide-react'
+import { sectors as mockSectors, Sector } from '@/lib/mockData'
+import { Plus, Users, Pencil, Trash2 } from 'lucide-react'
+import { SectorDialog } from '@/components/company-admin/SectorDialog'
+import { toast } from 'sonner'
 
 export default function Sectors() {
+  const [sectors, setSectors] = useState<Sector[]>(mockSectors)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingSector, setEditingSector] = useState<Sector | null>(null)
+
+  const handleAddSector = (data: any) => {
+    const newSector: Sector = {
+      id: `s${Date.now()}`,
+      name: data.name,
+      companyId: 'c1',
+      employeeCount: data.employeeIds?.length || 0,
+    }
+    setSectors([...sectors, newSector])
+    toast.success('Setor criado com sucesso!')
+  }
+
+  const handleEditSector = (data: any) => {
+    if (!editingSector) return
+    const updatedSectors = sectors.map((s) =>
+      s.id === editingSector.id
+        ? {
+            ...s,
+            name: data.name,
+            employeeCount: data.employeeIds?.length || s.employeeCount,
+          }
+        : s,
+    )
+    setSectors(updatedSectors)
+    setEditingSector(null)
+    toast.success('Setor atualizado com sucesso!')
+  }
+
+  const openEditModal = (sector: Sector) => {
+    setEditingSector(sector)
+    setIsModalOpen(true)
+  }
+
+  const handleDeleteSector = (id: string) => {
+    setSectors(sectors.filter((s) => s.id !== id))
+    toast.success('Setor removido.')
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl font-bold tracking-tight font-heading text-primary">
           Gestão de Setores
         </h1>
-        <Button>
+        <Button
+          onClick={() => {
+            setEditingSector(null)
+            setIsModalOpen(true)
+          }}
+        >
           <Plus className="mr-2 h-4 w-4" /> Adicionar Setor
         </Button>
       </div>
@@ -71,9 +120,22 @@ export default function Sectors() {
                       )}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm">
-                        Editar
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openEditModal(sector)}
+                        >
+                          <Pencil className="h-4 w-4 text-gray-500" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteSector(sector.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -81,6 +143,16 @@ export default function Sectors() {
           </Table>
         </CardContent>
       </Card>
+
+      <SectorDialog
+        open={isModalOpen}
+        onOpenChange={(open) => {
+          setIsModalOpen(open)
+          if (!open) setEditingSector(null)
+        }}
+        sectorToEdit={editingSector}
+        onSubmit={editingSector ? handleEditSector : handleAddSector}
+      />
     </div>
   )
 }
