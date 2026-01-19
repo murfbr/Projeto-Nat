@@ -26,6 +26,8 @@ export interface Employee {
   photoUrl?: string
 }
 
+export type ContentScope = 'global' | 'company' | 'sector' | 'user'
+
 export interface Content {
   id: string
   title: string
@@ -36,6 +38,8 @@ export interface Content {
   date: string
   category: string
   visible: boolean
+  scope: ContentScope
+  targetId?: string
 }
 
 export const companies: Company[] = [
@@ -73,6 +77,8 @@ export const sectors: Sector[] = [
   { id: 's2', name: 'Operacional', companyId: 'c1', employeeCount: 45 },
   { id: 's3', name: 'RH', companyId: 'c1', employeeCount: 4 },
   { id: 's4', name: 'Tecnologia', companyId: 'c2', employeeCount: 20 },
+  { id: 's5', name: 'Vendas', companyId: 'c2', employeeCount: 15 },
+  { id: 's6', name: 'Logística', companyId: 'c3', employeeCount: 30 },
 ]
 
 export const employees: Employee[] = [
@@ -106,6 +112,16 @@ export const employees: Employee[] = [
     status: 'inactive',
     photoUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=e3',
   },
+  {
+    id: 'u3', // Match the logged in mock user for testing
+    name: 'Carlos Mendes',
+    email: 'carlos@empresa.com',
+    cpf: '123.123.123-12',
+    role: 'Employee',
+    sectorId: 's1',
+    status: 'active',
+    photoUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=u3',
+  },
 ]
 
 export const libraryContent: Content[] = [
@@ -121,6 +137,7 @@ export const libraryContent: Content[] = [
     date: '2023-10-01',
     category: 'Saúde Mental',
     visible: true,
+    scope: 'global',
   },
   {
     id: 'l2',
@@ -133,6 +150,7 @@ export const libraryContent: Content[] = [
     date: '2023-10-05',
     category: 'Saúde Física',
     visible: true,
+    scope: 'global',
   },
   {
     id: 'l3',
@@ -146,6 +164,21 @@ export const libraryContent: Content[] = [
     date: '2023-10-10',
     category: 'Bem-estar',
     visible: false,
+    scope: 'global',
+  },
+  {
+    id: 'l4',
+    title: 'Onboarding SulAmérica',
+    type: 'video',
+    description: 'Boas-vindas aos novos colaboradores da SulAmérica.',
+    thumbnailUrl:
+      'https://img.usecurling.com/p/400/225?q=welcome%20team&color=blue',
+    duration: '03:15',
+    date: '2023-11-01',
+    category: 'Institucional',
+    visible: true,
+    scope: 'company',
+    targetId: 'c1',
   },
 ]
 

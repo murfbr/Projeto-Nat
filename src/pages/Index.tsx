@@ -27,7 +27,7 @@ export default function Index() {
               <ShieldCheck className="h-6 w-6 text-primary" />
             </div>
             <span className="font-heading text-xl font-bold text-primary">
-              Health<span className="text-secondary">&</span>Trust
+              Psi<span className="text-secondary">Med</span>
             </span>
           </div>
           <nav className="flex items-center gap-4">
@@ -85,7 +85,7 @@ export default function Index() {
               <div className="relative mx-auto w-full max-w-[600px] lg:max-w-none">
                 <div className="relative aspect-video overflow-hidden rounded-xl shadow-2xl bg-slate-200 ring-1 ring-slate-900/10">
                   <img
-                    alt="Dashboard Health&Trust"
+                    alt="Dashboard Psi Med"
                     className="object-cover w-full h-full"
                     src="https://img.usecurling.com/p/800/450?q=corporate%20dashboard%20analytics&color=blue"
                   />
@@ -205,10 +205,10 @@ export default function Index() {
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-primary" />
-            <span className="font-bold text-slate-700">Health&Trust</span>
+            <span className="font-bold text-slate-700">Psi Med</span>
           </div>
           <p className="text-sm text-muted-foreground text-center md:text-right">
-            &copy; {new Date().getFullYear()} Health&Trust. Todos os direitos
+            &copy; {new Date().getFullYear()} Psi Med. Todos os direitos
             reservados.
           </p>
         </div>

@@ -17,6 +17,10 @@ import {
   EyeOff,
   Trash2,
   Edit,
+  Globe,
+  Building,
+  Users,
+  User,
 } from 'lucide-react'
 import { ContentDialog } from '@/components/super-admin/ContentDialog'
 import { toast } from 'sonner'
@@ -67,6 +71,36 @@ export default function Content() {
     setIsModalOpen(true)
   }
 
+  const getScopeIcon = (scope: string) => {
+    switch (scope) {
+      case 'global':
+        return <Globe className="h-3 w-3" />
+      case 'company':
+        return <Building className="h-3 w-3" />
+      case 'sector':
+        return <Users className="h-3 w-3" />
+      case 'user':
+        return <User className="h-3 w-3" />
+      default:
+        return <Globe className="h-3 w-3" />
+    }
+  }
+
+  const getScopeLabel = (scope: string) => {
+    switch (scope) {
+      case 'global':
+        return 'Global'
+      case 'company':
+        return 'Empresa'
+      case 'sector':
+        return 'Setor'
+      case 'user':
+        return 'Usuário'
+      default:
+        return 'Global'
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -88,7 +122,7 @@ export default function Content() {
           <CardHeader>
             <CardTitle>Biblioteca Digital</CardTitle>
             <CardDescription>
-              Gerencie a visibilidade e edição dos materiais educativos.
+              Gerencie a visibilidade e o público-alvo dos materiais educativos.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -120,6 +154,12 @@ export default function Content() {
                         </Badge>
                       </div>
                     )}
+                    <div className="absolute top-2 left-2">
+                      <Badge className="bg-white/90 text-black hover:bg-white flex gap-1 items-center shadow-sm">
+                        {getScopeIcon(item.scope)}
+                        {getScopeLabel(item.scope)}
+                      </Badge>
+                    </div>
                   </div>
                   <div className="p-4">
                     <div className="flex items-start justify-between gap-2">

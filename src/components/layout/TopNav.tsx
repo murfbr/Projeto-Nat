@@ -1,4 +1,4 @@
-import { Bell, User, Settings, LogOut } from 'lucide-react'
+import { Bell, Settings, LogOut } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   DropdownMenu,
@@ -43,7 +43,7 @@ export const TopNav = () => {
             </svg>
           </div>
           <span className="font-heading text-lg font-bold text-primary">
-            Health<span className="text-secondary">&</span>Trust
+            Psi<span className="text-secondary">Med</span>
           </span>
         </Link>
       </div>

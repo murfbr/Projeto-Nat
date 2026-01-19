@@ -60,7 +60,7 @@ export default function Login() {
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-8 w-8 text-white" />
             <span className="font-heading text-2xl font-bold">
-              Health<span className="text-secondary">&</span>Trust
+              Psi<span className="text-secondary">Med</span>
             </span>
           </div>
           <div className="space-y-4">
@@ -74,7 +74,7 @@ export default function Login() {
             </p>
           </div>
           <div className="flex items-center gap-2 text-sm text-slate-400">
-            <span>© 2024 Health&Trust Inc.</span>
+            <span>© 2024 Psi Med Inc.</span>
           </div>
         </div>
       </div>

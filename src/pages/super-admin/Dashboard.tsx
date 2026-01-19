@@ -46,7 +46,7 @@ export default function SuperAdminDashboard() {
           Visão Geral da Plataforma
         </h1>
         <p className="text-muted-foreground">
-          Métricas globais de uso e engajamento do Health&Trust.
+          Métricas globais de uso e engajamento do Psi Med.
         </p>
       </div>
 
