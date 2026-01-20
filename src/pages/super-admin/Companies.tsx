@@ -12,11 +12,11 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   companies as mockCompanies,
+  partners as mockPartners,
   sectors as mockSectors,
   employees as mockEmployees,
   Company,
-  Sector,
-  Employee,
+  Partner,
 } from '@/lib/mockData'
 import {
   Plus,
@@ -30,6 +30,7 @@ import {
   ArrowLeft,
   Users,
   Briefcase,
+  Handshake,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -41,30 +42,44 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { CompanyDialog } from '@/components/super-admin/CompanyDialog'
+import { PartnerDialog } from '@/components/super-admin/PartnerDialog'
 import { ReportDialog } from '@/components/super-admin/ReportDialog'
 import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
 
-type ViewState = 'companies' | 'sectors' | 'users'
+type ViewState = 'partners' | 'companies' | 'sectors' | 'users'
 
 export default function Companies() {
-  const [view, setView] = useState<ViewState>('companies')
+  const [view, setView] = useState<ViewState>('partners')
+  const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(
+    null,
+  )
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
     null,
   )
   const [selectedSectorId, setSelectedSectorId] = useState<string | null>(null)
 
-  // Data
+  // Data State
+  const [partners, setPartners] = useState<Partner[]>(mockPartners)
   const [companies, setCompanies] = useState<Company[]>(mockCompanies)
-  // For simplicity, we filter mockSectors and mockEmployees based on selection
-  // In a real app, we would fetch these
 
   const [searchTerm, setSearchTerm] = useState('')
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+
+  // Modals
+  const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false)
+  const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+
+  // Editing state
   const [editingCompany, setEditingCompany] = useState<Company | null>(null)
+  const [editingPartner, setEditingPartner] = useState<Partner | null>(null)
 
   // Navigation Handlers
+  const handleViewCompanies = (partnerId: string) => {
+    setSelectedPartnerId(partnerId)
+    setView('companies')
+    setSearchTerm('')
+  }
+
   const handleViewSectors = (companyId: string) => {
     setSelectedCompanyId(companyId)
     setView('sectors')
@@ -84,14 +99,22 @@ export default function Companies() {
     } else if (view === 'sectors') {
       setView('companies')
       setSelectedCompanyId(null)
+    } else if (view === 'companies') {
+      setView('partners')
+      setSelectedPartnerId(null)
     }
   }
 
   // Filter Logic
+  const filteredPartners = partners.filter((partner) =>
+    partner.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
+
   const filteredCompanies = companies.filter(
     (company) =>
-      company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      company.cnpj.includes(searchTerm),
+      (!selectedPartnerId || company.partnerId === selectedPartnerId) &&
+      (company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        company.cnpj.includes(searchTerm)),
   )
 
   const filteredSectors = mockSectors.filter(
@@ -107,7 +130,41 @@ export default function Companies() {
         employee.email.toLowerCase().includes(searchTerm.toLowerCase())),
   )
 
-  // Actions
+  // Partner Actions
+  const handleAddPartner = (data: any) => {
+    const newPartner: Partner = {
+      id: `p${Date.now()}`,
+      name: data.name,
+      email: data.email,
+      active: true,
+      createdAt: new Date().toISOString().split('T')[0],
+    }
+    setPartners([...partners, newPartner])
+    toast.success('Parceiro cadastrado com sucesso!')
+  }
+
+  const handleEditPartner = (data: any) => {
+    if (!editingPartner) return
+    const updated = partners.map((p) =>
+      p.id === editingPartner.id ? { ...p, ...data } : p,
+    )
+    setPartners(updated)
+    setEditingPartner(null)
+    toast.success('Parceiro atualizado.')
+  }
+
+  const handleDeletePartner = (id: string) => {
+    setPartners(partners.filter((p) => p.id !== id))
+    // Also could remove associated companies, but we'll leave them as orphan for now or block delete
+    toast.success('Parceiro removido.')
+  }
+
+  const openEditPartnerModal = (partner: Partner) => {
+    setEditingPartner(partner)
+    setIsPartnerModalOpen(true)
+  }
+
+  // Company Actions
   const handleAddCompany = (data: any) => {
     const newCompany: Company = {
       id: `c${Date.now()}`,
@@ -117,6 +174,7 @@ export default function Companies() {
       createdAt: new Date().toISOString().split('T')[0],
       industry: data.industry,
       email: data.email,
+      partnerId: data.partnerId,
     }
     setCompanies([...companies, newCompany])
     toast.success('Empresa cadastrada com sucesso!')
@@ -124,18 +182,15 @@ export default function Companies() {
 
   const handleEditCompany = (data: any) => {
     if (!editingCompany) return
-    const updatedCompanies = companies.map((c) =>
+    const updated = companies.map((c) =>
       c.id === editingCompany.id
         ? {
             ...c,
-            name: data.name,
-            cnpj: data.cnpj,
-            industry: data.industry,
-            email: data.email,
+            ...data,
           }
         : c,
     )
-    setCompanies(updatedCompanies)
+    setCompanies(updated)
     setEditingCompany(null)
     toast.success('Dados da empresa atualizados.')
   }
@@ -145,13 +200,18 @@ export default function Companies() {
     toast.success('Empresa removida.')
   }
 
-  const openEditModal = (company: Company) => {
+  const openEditCompanyModal = (company: Company) => {
     setEditingCompany(company)
-    setIsAddModalOpen(true)
+    setIsCompanyModalOpen(true)
   }
 
   // Breadcrumbs title
   const getTitle = () => {
+    if (view === 'partners') return 'Gestão de Parceiros'
+    if (view === 'companies') {
+      const partner = partners.find((p) => p.id === selectedPartnerId)
+      return partner ? `Empresas de ${partner.name}` : 'Todas as Empresas'
+    }
     if (view === 'sectors') {
       const company = companies.find((c) => c.id === selectedCompanyId)
       return `Setores de ${company?.name}`
@@ -167,7 +227,7 @@ export default function Companies() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
-          {view !== 'companies' && (
+          {view !== 'partners' && (
             <Button variant="ghost" size="icon" onClick={handleBack}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
@@ -176,8 +236,9 @@ export default function Companies() {
             {getTitle()}
           </h1>
         </div>
-        {view === 'companies' && (
-          <div className="flex gap-2">
+
+        <div className="flex gap-2">
+          {view === 'companies' && (
             <Button
               variant="outline"
               onClick={() => setIsReportModalOpen(true)}
@@ -185,36 +246,51 @@ export default function Companies() {
             >
               <FileBarChart className="mr-2 h-4 w-4" /> Relatórios
             </Button>
+          )}
+
+          {view === 'partners' && (
             <Button
               onClick={() => {
-                setEditingCompany(null)
-                setIsAddModalOpen(true)
+                setEditingPartner(null)
+                setIsPartnerModalOpen(true)
               }}
               className="w-full sm:w-auto"
             >
-              <Plus className="mr-2 h-4 w-4" /> Adicionar Empresa
+              <Plus className="mr-2 h-4 w-4" /> Novo Parceiro
             </Button>
-          </div>
-        )}
+          )}
+
+          {view === 'companies' && (
+            <Button
+              onClick={() => {
+                setEditingCompany(null)
+                setIsCompanyModalOpen(true)
+              }}
+              className="w-full sm:w-auto"
+            >
+              <Plus className="mr-2 h-4 w-4" /> Nova Empresa
+            </Button>
+          )}
+        </div>
       </div>
 
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-medium">
-            {view === 'companies'
-              ? 'Empresas Cadastradas'
-              : view === 'sectors'
-                ? 'Departamentos'
-                : 'Usuários'}
+            {view === 'partners'
+              ? 'Parceiros de Negócio'
+              : view === 'companies'
+                ? 'Empresas'
+                : view === 'sectors'
+                  ? 'Departamentos'
+                  : 'Usuários'}
           </CardTitle>
           <div className="flex items-center py-4">
             <div className="relative w-full max-w-sm">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder={
-                  view === 'users' ? 'Buscar usuário...' : 'Buscar...'
-                }
+                placeholder="Buscar..."
                 className="pl-8"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -226,6 +302,14 @@ export default function Companies() {
           <Table>
             <TableHeader>
               <TableRow>
+                {view === 'partners' && (
+                  <>
+                    <TableHead>Parceiro</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
+                  </>
+                )}
                 {view === 'companies' && (
                   <>
                     <TableHead>Empresa</TableHead>
@@ -252,6 +336,62 @@ export default function Companies() {
               </TableRow>
             </TableHeader>
             <TableBody>
+              {view === 'partners' &&
+                filteredPartners.map((partner) => (
+                  <TableRow key={partner.id}>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded bg-purple-50">
+                          <Handshake className="h-4 w-4 text-purple-600" />
+                        </div>
+                        {partner.name}
+                      </div>
+                    </TableCell>
+                    <TableCell>{partner.email}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={partner.active ? 'default' : 'secondary'}
+                        className={partner.active ? 'bg-green-600' : ''}
+                      >
+                        {partner.active ? 'Ativo' : 'Inativo'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleViewCompanies(partner.id)}
+                        >
+                          Ver Empresas <ChevronRight className="ml-1 h-4 w-4" />
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                            <DropdownMenuItem
+                              onClick={() => openEditPartnerModal(partner)}
+                            >
+                              <Pencil className="mr-2 h-4 w-4" /> Editar
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              className="text-red-600"
+                              onClick={() => handleDeletePartner(partner.id)}
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" /> Remover
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+
               {view === 'companies' &&
                 filteredCompanies.map((company) => (
                   <TableRow key={company.id}>
@@ -294,7 +434,7 @@ export default function Companies() {
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Ações</DropdownMenuLabel>
                             <DropdownMenuItem
-                              onClick={() => openEditModal(company)}
+                              onClick={() => openEditCompanyModal(company)}
                             >
                               <Pencil className="mr-2 h-4 w-4" /> Editar
                             </DropdownMenuItem>
@@ -357,7 +497,8 @@ export default function Companies() {
                   </TableRow>
                 ))}
 
-              {((view === 'companies' && filteredCompanies.length === 0) ||
+              {((view === 'partners' && filteredPartners.length === 0) ||
+                (view === 'companies' && filteredCompanies.length === 0) ||
                 (view === 'sectors' && filteredSectors.length === 0) ||
                 (view === 'users' && filteredEmployees.length === 0)) && (
                 <TableRow>
@@ -371,21 +512,32 @@ export default function Companies() {
         </CardContent>
       </Card>
 
-      <CompanyDialog
-        open={isAddModalOpen}
+      <PartnerDialog
+        open={isPartnerModalOpen}
         onOpenChange={(open) => {
-          setIsAddModalOpen(open)
+          setIsPartnerModalOpen(open)
+          if (!open) setEditingPartner(null)
+        }}
+        partnerToEdit={editingPartner}
+        onSubmit={editingPartner ? handleEditPartner : handleAddPartner}
+      />
+
+      <CompanyDialog
+        open={isCompanyModalOpen}
+        onOpenChange={(open) => {
+          setIsCompanyModalOpen(open)
           if (!open) setEditingCompany(null)
         }}
         companyToEdit={editingCompany}
         onSubmit={editingCompany ? handleEditCompany : handleAddCompany}
+        defaultPartnerId={selectedPartnerId}
       />
 
       <ReportDialog
         open={isReportModalOpen}
         onOpenChange={setIsReportModalOpen}
         companies={companies}
-        onGenerate={() => {}}
+        onGenerate={() => toast.success('Relatório gerado!')}
       />
     </div>
   )

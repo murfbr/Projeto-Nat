@@ -21,6 +21,7 @@ import {
   Building,
   Users,
   User,
+  Handshake,
 } from 'lucide-react'
 import { ContentDialog } from '@/components/super-admin/ContentDialog'
 import { toast } from 'sonner'
@@ -75,6 +76,8 @@ export default function Content() {
     switch (scope) {
       case 'global':
         return <Globe className="h-3 w-3" />
+      case 'partner':
+        return <Handshake className="h-3 w-3" />
       case 'company':
         return <Building className="h-3 w-3" />
       case 'sector':
@@ -90,6 +93,8 @@ export default function Content() {
     switch (scope) {
       case 'global':
         return 'Global'
+      case 'partner':
+        return 'Parceiro'
       case 'company':
         return 'Empresa'
       case 'sector':

@@ -31,6 +31,7 @@ import { Textarea } from '@/components/ui/textarea'
 import {
   Content,
   companies,
+  partners,
   sectors as allSectors,
   employees as allEmployees,
 } from '@/lib/mockData'
@@ -42,7 +43,7 @@ const formSchema = z.object({
   description: z.string().min(10, 'Descrição deve ser mais detalhada'),
   category: z.string().min(2, 'Categoria obrigatória'),
   visible: z.boolean().default(true),
-  scope: z.enum(['global', 'company', 'sector', 'user']),
+  scope: z.enum(['global', 'partner', 'company', 'sector', 'user']),
   targetId: z.string().optional(),
 })
 
@@ -218,6 +219,9 @@ export function ContentDialog({
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="global">Global (Todos)</SelectItem>
+                      <SelectItem value="partner">
+                        Parceiro Específico
+                      </SelectItem>
                       <SelectItem value="company">
                         Empresa Específica
                       </SelectItem>
@@ -237,32 +241,67 @@ export function ContentDialog({
                   Definição de Público Alvo
                 </h4>
 
-                {/* Company Selection - Always visible if not global */}
-                <FormItem>
-                  <FormLabel>Selecione a Empresa</FormLabel>
-                  <Select
-                    onValueChange={(val) => {
-                      setSelectedCompanyId(val)
-                      if (scope === 'company') {
-                        form.setValue('targetId', val)
-                      }
-                    }}
-                    value={selectedCompanyId}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione a empresa" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {companies.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
+                {/* Partner Selection - Visible if scope is partner */}
+                {scope === 'partner' && (
+                  <FormField
+                    control={form.control}
+                    name="targetId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Selecione o Parceiro</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecione o parceiro" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {partners.map((p) => (
+                              <SelectItem key={p.id} value={p.id}>
+                                {p.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
+                {/* Company Selection - Visible if not global/partner */}
+                {(scope === 'company' ||
+                  scope === 'sector' ||
+                  scope === 'user') && (
+                  <FormItem>
+                    <FormLabel>Selecione a Empresa</FormLabel>
+                    <Select
+                      onValueChange={(val) => {
+                        setSelectedCompanyId(val)
+                        if (scope === 'company') {
+                          form.setValue('targetId', val)
+                        }
+                      }}
+                      value={selectedCompanyId}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a empresa" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {companies.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
 
                 {/* Sector Selection - Visible if sector or user scope */}
                 {(scope === 'sector' || scope === 'user') && (

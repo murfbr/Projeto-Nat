@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
-import { libraryContent, Content } from '@/lib/mockData'
+import { libraryContent, Content, companies } from '@/lib/mockData'
 import { PlayCircle, FileText, CheckCircle2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import useUserStore from '@/stores/useUserStore'
@@ -17,6 +17,13 @@ export default function Library() {
     }
   }
 
+  // Helper to find partner ID for current user
+  const getUserPartnerId = () => {
+    if (!user?.companyId) return null
+    const company = companies.find((c) => c.id === user.companyId)
+    return company?.partnerId
+  }
+
   // Filter content based on user scope
   const filteredContent = libraryContent.filter((item) => {
     // Must be visible
@@ -24,6 +31,13 @@ export default function Library() {
 
     // Scope check
     if (item.scope === 'global') return true
+
+    // Partner check
+    if (item.scope === 'partner') {
+      const partnerId = getUserPartnerId()
+      return partnerId && item.targetId === partnerId
+    }
+
     if (item.scope === 'company' && item.targetId === user?.companyId)
       return true
     if (item.scope === 'sector' && item.targetId === user?.sectorId) return true

@@ -1,3 +1,11 @@
+export interface Partner {
+  id: string
+  name: string
+  email: string
+  active: boolean
+  createdAt: string
+}
+
 export interface Company {
   id: string
   name: string
@@ -6,6 +14,7 @@ export interface Company {
   createdAt: string
   industry?: string
   email?: string
+  partnerId: string
 }
 
 export interface Sector {
@@ -26,7 +35,7 @@ export interface Employee {
   photoUrl?: string
 }
 
-export type ContentScope = 'global' | 'company' | 'sector' | 'user'
+export type ContentScope = 'global' | 'partner' | 'company' | 'sector' | 'user'
 
 export interface Content {
   id: string
@@ -42,6 +51,23 @@ export interface Content {
   targetId?: string
 }
 
+export const partners: Partner[] = [
+  {
+    id: 'p1',
+    name: 'Health Corp Partners',
+    email: 'contact@healthcorp.com',
+    active: true,
+    createdAt: '2022-11-10',
+  },
+  {
+    id: 'p2',
+    name: 'SafeWork Consultoria',
+    email: 'admin@safework.com',
+    active: true,
+    createdAt: '2023-01-05',
+  },
+]
+
 export const companies: Company[] = [
   {
     id: 'c1',
@@ -51,6 +77,7 @@ export const companies: Company[] = [
     createdAt: '2023-01-15',
     industry: 'Seguros',
     email: 'contato@sulamerica.com.br',
+    partnerId: 'p1',
   },
   {
     id: 'c2',
@@ -60,6 +87,7 @@ export const companies: Company[] = [
     createdAt: '2023-03-20',
     industry: 'Tecnologia',
     email: 'admin@techsolutions.com',
+    partnerId: 'p2',
   },
   {
     id: 'c3',
@@ -69,6 +97,7 @@ export const companies: Company[] = [
     createdAt: '2023-05-10',
     industry: 'Varejo',
     email: 'rh@grupovarejo.com.br',
+    partnerId: 'p1',
   },
 ]
 
@@ -179,6 +208,20 @@ export const libraryContent: Content[] = [
     visible: true,
     scope: 'company',
     targetId: 'c1',
+  },
+  {
+    id: 'l5',
+    title: 'Boas Práticas para Parceiros',
+    type: 'article',
+    description:
+      'Guia exclusivo para empresas parceiras da Health Corp Partners.',
+    thumbnailUrl:
+      'https://img.usecurling.com/p/400/225?q=handshake%20business&color=green',
+    date: '2023-11-15',
+    category: 'Gestão',
+    visible: true,
+    scope: 'partner',
+    targetId: 'p1',
   },
 ]
 

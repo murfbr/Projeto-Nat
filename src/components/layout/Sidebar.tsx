@@ -8,6 +8,7 @@ import {
   Activity,
   Library,
   Briefcase,
+  Handshake,
 } from 'lucide-react'
 import useUserStore from '@/stores/useUserStore'
 
@@ -22,7 +23,7 @@ export const Sidebar = ({ className }: SidebarProps) => {
 
   const superAdminLinks = [
     { href: '/super-admin', label: 'Painel', icon: LayoutDashboard },
-    { href: '/super-admin/companies', label: 'Empresas', icon: Building2 },
+    { href: '/super-admin/companies', label: 'Parceiros', icon: Handshake }, // Renamed from Empresas
     { href: '/super-admin/content', label: 'Conteúdo', icon: Library },
     { href: '/super-admin/clinical', label: 'Clínico', icon: Activity },
   ]

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { libraryContent } from '@/lib/mockData'
+import { libraryContent, companies } from '@/lib/mockData'
 import { PlayCircle, FileText, ClipboardCheck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import useUserStore from '@/stores/useUserStore'
@@ -9,10 +9,24 @@ import useUserStore from '@/stores/useUserStore'
 export default function EmployeeDashboard() {
   const { user } = useUserStore()
 
-  // Filter content logic duplication - ideally in a hook, but okay for this scope
+  // Helper to find partner ID for current user
+  const getUserPartnerId = () => {
+    if (!user?.companyId) return null
+    const company = companies.find((c) => c.id === user.companyId)
+    return company?.partnerId
+  }
+
+  // Filter content logic
   const filteredContent = libraryContent.filter((item) => {
     if (!item.visible) return false
     if (item.scope === 'global') return true
+
+    // Partner check
+    if (item.scope === 'partner') {
+      const partnerId = getUserPartnerId()
+      return partnerId && item.targetId === partnerId
+    }
+
     if (item.scope === 'company' && item.targetId === user?.companyId)
       return true
     if (item.scope === 'sector' && item.targetId === user?.sectorId) return true

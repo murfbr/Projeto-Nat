@@ -20,13 +20,21 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Company } from '@/lib/mockData'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Company, partners } from '@/lib/mockData'
 
 const formSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
   cnpj: z.string().min(14, 'CNPJ inválido'),
   industry: z.string().min(2, 'Informe o setor de atuação'),
   email: z.string().email('Email inválido'),
+  partnerId: z.string().min(1, 'Selecione um parceiro responsável'),
 })
 
 interface CompanyDialogProps {
@@ -34,6 +42,7 @@ interface CompanyDialogProps {
   onOpenChange: (open: boolean) => void
   companyToEdit?: Company | null
   onSubmit: (data: z.infer<typeof formSchema>) => void
+  defaultPartnerId?: string | null
 }
 
 export function CompanyDialog({
@@ -41,6 +50,7 @@ export function CompanyDialog({
   onOpenChange,
   companyToEdit,
   onSubmit,
+  defaultPartnerId,
 }: CompanyDialogProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,6 +59,7 @@ export function CompanyDialog({
       cnpj: '',
       industry: '',
       email: '',
+      partnerId: '',
     },
   })
 
@@ -59,6 +70,7 @@ export function CompanyDialog({
         cnpj: companyToEdit.cnpj,
         industry: companyToEdit.industry || '',
         email: companyToEdit.email || '',
+        partnerId: companyToEdit.partnerId || defaultPartnerId || '',
       })
     } else {
       form.reset({
@@ -66,9 +78,10 @@ export function CompanyDialog({
         cnpj: '',
         industry: '',
         email: '',
+        partnerId: defaultPartnerId || '',
       })
     }
-  }, [companyToEdit, form, open])
+  }, [companyToEdit, form, open, defaultPartnerId])
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     onSubmit(values)
@@ -94,6 +107,35 @@ export function CompanyDialog({
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-4"
           >
+            <FormField
+              control={form.control}
+              name="partnerId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Parceiro Responsável</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    value={field.value}
+                    disabled={!!defaultPartnerId && !companyToEdit}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione um parceiro" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {partners.map((partner) => (
+                        <SelectItem key={partner.id} value={partner.id}>
+                          {partner.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="name"
