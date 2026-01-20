@@ -31,8 +31,8 @@ export default function Questionnaire() {
 
   const handleNext = async () => {
     if (isLastQuestion) {
-      toast.success('Check-up mensal realizado', {
-        description: 'Seus dados foram salvos com segurança.',
+      toast.success('Avaliação registrada', {
+        description: 'Dados salvos com sucesso.',
       })
       setIsCompleted(true)
     } else {
@@ -48,7 +48,7 @@ export default function Questionnaire() {
 
   if (isCompleted) {
     return (
-      <div className="mx-auto max-w-lg animate-fade-in py-12">
+      <div className="mx-auto max-w-lg py-12">
         <Card className="border-t-4 border-t-green-600 p-8 text-center shadow-lg bg-white">
           <CardContent className="flex flex-col items-center justify-center space-y-6 pt-2">
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
@@ -57,11 +57,11 @@ export default function Questionnaire() {
 
             <div className="space-y-2">
               <h2 className="font-heading text-2xl font-bold text-slate-900">
-                Avaliação Concluída
+                Avaliação Registrada
               </h2>
               <p className="mx-auto max-w-xs text-base text-muted-foreground">
-                Obrigado por contribuir para um ambiente de trabalho mais
-                saudável e seguro.
+                Sua participação é fundamental para o mapeamento de riscos
+                psicossociais e melhoria do ambiente corporativo.
               </p>
             </div>
 
@@ -72,8 +72,9 @@ export default function Questionnaire() {
                   Dados Protegidos
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Suas respostas foram anonimizadas e serão utilizadas apenas
-                  para fins estatísticos de saúde ocupacional.
+                  Suas respostas são tratadas com estrita confidencialidade e
+                  serão utilizadas apenas para fins estatísticos de saúde
+                  ocupacional.
                 </p>
               </div>
             </div>

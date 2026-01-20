@@ -52,7 +52,7 @@ export default function Index() {
                   </h1>
                   <p className="max-w-[600px] text-lg text-muted-foreground md:text-xl">
                     A plataforma completa para gestão de riscos psicossociais.
-                    Diagnósticos precisos, anonimato garantido e conteúdo
+                    Diagnósticos precisos, confidencialidade e conteúdo
                     educativo para o bem-estar dos seus colaboradores.
                   </p>
                 </div>
