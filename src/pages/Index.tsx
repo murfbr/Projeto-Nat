@@ -208,8 +208,7 @@ export default function Index() {
             <span className="font-bold text-slate-700">Psi Med</span>
           </div>
           <p className="text-sm text-muted-foreground text-center md:text-right">
-            &copy; {new Date().getFullYear()} Psi Med. Todos os direitos
-            reservados.
+            &copy; 2025 Psi Med. Todos os direitos reservados.
           </p>
         </div>
       </footer>
