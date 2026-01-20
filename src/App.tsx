@@ -13,6 +13,7 @@ import NotFound from './pages/NotFound'
 // Layouts
 import AdminLayout from './components/layout/AdminLayout'
 import EmployeeLayout from './components/layout/EmployeeLayout'
+import PartnerLayout from './components/layout/PartnerLayout'
 
 // Super Admin Pages
 import SuperAdminDashboard from './pages/super-admin/Dashboard'
@@ -24,6 +25,11 @@ import Clinical from './pages/super-admin/Clinical'
 import CompanyDashboard from './pages/company-admin/Analytics'
 import Sectors from './pages/company-admin/Sectors'
 import Employees from './pages/company-admin/Employees'
+
+// Partner Pages
+import PartnerDashboard from './pages/partner/Dashboard'
+import PartnerCompanyView from './pages/partner/CompanyView'
+import PartnerSectorView from './pages/partner/SectorView'
 
 // Employee Pages
 import EmployeeDashboard from './pages/employee/Dashboard'
@@ -51,6 +57,16 @@ const App = () => (
             <Route path="companies" element={<Companies />} />
             <Route path="content" element={<Content />} />
             <Route path="clinical" element={<Clinical />} />
+          </Route>
+
+          {/* Partner Routes */}
+          <Route path="/partner" element={<PartnerLayout />}>
+            <Route index element={<PartnerDashboard />} />
+            <Route path="company/:companyId" element={<PartnerCompanyView />} />
+            <Route
+              path="company/:companyId/sector/:sectorId"
+              element={<PartnerSectorView />}
+            />
           </Route>
 
           {/* Company Admin Routes */}

@@ -11,7 +11,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import useUserStore, { UserRole } from '@/stores/useUserStore'
-import { ShieldCheck, Lock, Mail, ArrowRight } from 'lucide-react'
+import { ShieldCheck, Lock, Mail, ArrowRight, Handshake } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -32,6 +32,9 @@ export default function Login() {
           break
         case 'company_admin':
           navigate('/company-admin')
+          break
+        case 'partner':
+          navigate('/partner')
           break
         case 'employee':
           navigate('/employee')
@@ -138,7 +141,7 @@ export default function Login() {
               <div className="text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Acesso Rápido (Ambiente Dev)
               </div>
-              <div className="grid grid-cols-3 gap-2 w-full">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full">
                 <Button
                   variant="outline"
                   size="sm"
@@ -148,6 +151,16 @@ export default function Login() {
                 >
                   <ShieldCheck className="h-4 w-4" />
                   Super Admin
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs h-auto py-2 flex flex-col gap-1 hover:bg-primary/5 hover:text-primary hover:border-primary/20"
+                  onClick={() => handleLogin('partner')}
+                  disabled={loading}
+                >
+                  <Handshake className="h-4 w-4" />
+                  Parceiro
                 </Button>
                 <Button
                   variant="outline"

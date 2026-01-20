@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type UserRole = 'super_admin' | 'company_admin' | 'employee'
+export type UserRole = 'super_admin' | 'company_admin' | 'employee' | 'partner'
 
 export interface User {
   id: string
@@ -9,6 +9,7 @@ export interface User {
   role: UserRole
   companyId?: string
   sectorId?: string
+  partnerId?: string
   acceptedTerms: boolean
 }
 
@@ -45,6 +46,14 @@ const MOCK_USERS: Record<UserRole, User> = {
     companyId: 'c1',
     sectorId: 's1',
     acceptedTerms: false,
+  },
+  partner: {
+    id: 'u4',
+    name: 'Roberto Partner',
+    email: 'admin@healthcorp.com',
+    role: 'partner',
+    partnerId: 'p1',
+    acceptedTerms: true,
   },
 }
 
