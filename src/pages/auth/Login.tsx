@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -11,15 +11,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import useUserStore, { UserRole } from '@/stores/useUserStore'
-import {
-  ShieldCheck,
-  Lock,
-  Mail,
-  ArrowRight,
-  Handshake,
-  CheckCircle,
-  Activity,
-} from 'lucide-react'
+import { ShieldCheck, Lock, Mail, ArrowRight, Handshake } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -70,12 +62,15 @@ export default function Login() {
 
         {/* Branding Content */}
         <div className="relative z-10 flex h-full flex-col justify-between p-12 text-white">
-          <div className="flex items-center gap-2">
+          <Link
+            to="/"
+            className="flex items-center gap-2 hover:opacity-90 transition-opacity w-fit"
+          >
             <ShieldCheck className="h-8 w-8 text-white" />
             <span className="font-heading text-2xl font-bold">
-              Psi<span className="text-secondary">Med</span>
+              Conviva<span className="text-secondary">Psi</span>
             </span>
-          </div>
+          </Link>
 
           <div className="space-y-8">
             <div className="space-y-4">
@@ -88,40 +83,10 @@ export default function Login() {
                 ocupacional com total conformidade LGPD.
               </p>
             </div>
-
-            {/* FRPS Impact Section - Strategic Value */}
-            <div className="max-w-lg space-y-4 rounded-xl border border-white/10 bg-white/10 p-6 backdrop-blur-sm">
-              <h3 className="flex items-center gap-2 font-heading text-xl font-bold text-white">
-                <Activity className="h-5 w-5 text-secondary" />A gestão dos FRPS
-                impacta diretamente:
-              </h3>
-              <ul className="space-y-2">
-                {[
-                  'Processos trabalhistas',
-                  'Custos com afastamentos',
-                  'Retenção de talentos',
-                  'Clima organizacional',
-                  'Riscos reputacionais',
-                ].map((item, i) => (
-                  <li
-                    key={i}
-                    className="flex items-center gap-2 text-slate-200"
-                  >
-                    <CheckCircle className="h-4 w-4 shrink-0 text-secondary" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="border-t border-white/10 pt-2 text-sm leading-relaxed text-slate-300">
-                Empresas que se antecipam a essa mudança não apenas reduzem
-                riscos, mas também elevam engajamento, produtividade e
-                desempenho das lideranças.
-              </p>
-            </div>
           </div>
 
           <div className="flex items-center gap-2 text-sm text-slate-400">
-            <span>© 2025 Psi Med Inc.</span>
+            <span>© 2025 Conviva Psi Inc.</span>
           </div>
         </div>
       </div>

@@ -5,22 +5,8 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card'
-import {
-  Building2,
-  Users,
-  PlayCircle,
-  TrendingUp,
-  Activity,
-} from 'lucide-react'
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-} from 'recharts'
+import { Building2, Users, PlayCircle, Activity } from 'lucide-react'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart'
 import { companies, libraryContent } from '@/lib/mockData'
 
@@ -46,7 +32,7 @@ export default function SuperAdminDashboard() {
           Visão Geral da Plataforma
         </h1>
         <p className="text-muted-foreground">
-          Métricas globais de uso e engajamento do Psi Med.
+          Métricas globais de uso e engajamento do Conviva Psi.
         </p>
       </div>
 

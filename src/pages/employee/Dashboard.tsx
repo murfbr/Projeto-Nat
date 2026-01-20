@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { libraryContent, companies } from '@/lib/mockData'
-import { PlayCircle, FileText, ClipboardCheck } from 'lucide-react'
+import { PlayCircle, ClipboardCheck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import useUserStore from '@/stores/useUserStore'
 
@@ -44,7 +44,7 @@ export default function EmployeeDashboard() {
           Olá, {user?.name?.split(' ')[0]} 👋
         </h1>
         <p className="text-muted-foreground">
-          Bem-vindo ao seu espaço de cuidado e bem-estar no Psi Med.
+          Bem-vindo ao seu espaço de cuidado e bem-estar no Conviva Psi.
         </p>
 
         <Card className="border-l-4 border-l-secondary bg-gradient-to-r from-blue-50 to-transparent shadow-md">

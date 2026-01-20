@@ -49,8 +49,8 @@ export default function Questionnaire() {
   if (isCompleted) {
     return (
       <div className="mx-auto max-w-lg animate-fade-in py-12">
-        <Card className="border-t-4 border-t-green-600 p-6 text-center shadow-lg">
-          <CardContent className="flex flex-col items-center justify-center space-y-6 pt-6">
+        <Card className="border-t-4 border-t-green-600 p-8 text-center shadow-lg bg-white">
+          <CardContent className="flex flex-col items-center justify-center space-y-6 pt-2">
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
               <CheckCircle className="h-10 w-10 text-green-600" />
             </div>
@@ -65,7 +65,7 @@ export default function Questionnaire() {
               </p>
             </div>
 
-            <div className="flex w-full items-start gap-3 rounded-lg bg-slate-50 p-4 text-left">
+            <div className="flex w-full items-start gap-3 rounded-lg bg-slate-50 p-4 text-left border border-slate-100">
               <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
               <div className="space-y-1">
                 <p className="text-sm font-semibold text-slate-900">
@@ -78,7 +78,11 @@ export default function Questionnaire() {
               </div>
             </div>
 
-            <Button className="w-full" onClick={() => navigate('/employee')}>
+            <Button
+              className="w-full"
+              variant="outline"
+              onClick={() => navigate('/employee')}
+            >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Voltar ao Início
             </Button>

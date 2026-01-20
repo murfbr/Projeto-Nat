@@ -27,7 +27,7 @@ export default function Index() {
               <ShieldCheck className="h-6 w-6 text-primary" />
             </div>
             <span className="font-heading text-xl font-bold text-primary">
-              Psi<span className="text-secondary">Med</span>
+              Conviva<span className="text-secondary">Psi</span>
             </span>
           </div>
           <nav className="flex items-center gap-4">
@@ -85,7 +85,7 @@ export default function Index() {
               <div className="relative mx-auto w-full max-w-[600px] lg:max-w-none">
                 <div className="relative aspect-video overflow-hidden rounded-xl shadow-2xl bg-slate-200 ring-1 ring-slate-900/10">
                   <img
-                    alt="Dashboard Psi Med"
+                    alt="Dashboard Conviva Psi"
                     className="object-cover w-full h-full"
                     src="https://img.usecurling.com/p/800/450?q=corporate%20dashboard%20analytics&color=blue"
                   />
@@ -107,6 +107,54 @@ export default function Index() {
                       </p>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FRPS Impact Section - Strategic Value */}
+        <section className="bg-slate-900 py-16 md:py-24 text-white">
+          <div className="container mx-auto px-4">
+            <div className="grid gap-12 lg:grid-cols-2 items-center">
+              <div className="space-y-6">
+                <div className="flex items-center gap-2 font-heading text-2xl font-bold text-secondary">
+                  <Activity className="h-6 w-6" />
+                  <span>Impacto Estratégico</span>
+                </div>
+                <h2 className="font-heading text-3xl font-bold leading-tight sm:text-4xl">
+                  A gestão dos FRPS impacta diretamente:
+                </h2>
+                <ul className="space-y-4 pt-4">
+                  {[
+                    'Processos trabalhistas',
+                    'Custos com afastamentos',
+                    'Retenção de talentos',
+                    'Clima organizacional',
+                    'Riscos reputacionais',
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-lg">
+                      <CheckCircle2 className="h-6 w-6 shrink-0 text-secondary" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="space-y-8 rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10">
+                <p className="text-xl leading-relaxed text-slate-200">
+                  "Empresas que se antecipam a essa mudança não apenas reduzem
+                  riscos, mas também elevam engajamento, produtividade e
+                  desempenho das lideranças."
+                </p>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    asChild
+                    size="lg"
+                    variant="secondary"
+                    className="text-base font-semibold"
+                  >
+                    <Link to="/login">Começar Diagnóstico</Link>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -180,19 +228,19 @@ export default function Index() {
         </section>
 
         {/* CTA Section */}
-        <section className="bg-slate-900 py-16 md:py-24">
+        <section className="bg-slate-50 py-16 md:py-24 border-t">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="font-heading text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
+            <h2 className="font-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mb-6">
               Pronto para transformar sua empresa?
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-slate-300 mb-10">
+            <p className="mx-auto max-w-2xl text-lg text-slate-600 mb-10">
               Junte-se a empresas que já estão cuidando do seu ativo mais
               importante: as pessoas.
             </p>
             <Button
               asChild
               size="lg"
-              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 h-14 px-8 text-lg font-semibold"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 h-14 px-8 text-lg font-semibold"
             >
               <Link to="/login">Acessar Plataforma</Link>
             </Button>
@@ -205,10 +253,10 @@ export default function Index() {
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-primary" />
-            <span className="font-bold text-slate-700">Psi Med</span>
+            <span className="font-bold text-slate-700">Conviva Psi</span>
           </div>
           <p className="text-sm text-muted-foreground text-center md:text-right">
-            &copy; 2025 Psi Med. Todos os direitos reservados.
+            &copy; 2025 Conviva Psi. Todos os direitos reservados.
           </p>
         </div>
       </footer>

@@ -18,7 +18,7 @@ export const TopNav = () => {
 
   const handleLogout = () => {
     logout()
-    navigate('/')
+    navigate('/login')
   }
 
   return (
@@ -43,7 +43,7 @@ export const TopNav = () => {
             </svg>
           </div>
           <span className="font-heading text-lg font-bold text-primary">
-            Psi<span className="text-secondary">Med</span>
+            Conviva<span className="text-secondary">Psi</span>
           </span>
         </Link>
       </div>
