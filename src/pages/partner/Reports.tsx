@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import {
   Select,
   SelectContent,
@@ -34,7 +35,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { reports as mockReports, companies, Report } from '@/lib/mockData'
-import { FileText, Download, Plus, Upload, Calendar } from 'lucide-react'
+import {
+  FileText,
+  Download,
+  Plus,
+  Upload,
+  Calendar,
+  Building2,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import useUserStore from '@/stores/useUserStore'
 
