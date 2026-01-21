@@ -50,8 +50,8 @@ export const LGPDModal = () => {
             Termo de Privacidade e Consentimento
           </DialogTitle>
           <DialogDescription>
-            Por favor, leia atentamente nossos termos de uso e política de
-            privacidade para continuar.
+            Por favor, leia atentamente os termos de privacidade e consentimento
+            para o uso da plataforma Conviva Psi.
           </DialogDescription>
         </DialogHeader>
 
@@ -61,43 +61,56 @@ export const LGPDModal = () => {
             onScrollCapture={handleScroll}
           >
             <div className="prose prose-sm prose-slate dark:prose-invert">
-              <h3>1. Introdução</h3>
+              <h3>1. Objetivo</h3>
               <p>
-                Este termo tem como objetivo informar como seus dados serão
-                tratados em conformidade com a Lei Geral de Proteção de Dados
-                (LGPD). A sua privacidade é nossa prioridade.
+                A psicologia organizacional atua na identificação e prevenção de
+                riscos psicossociais, visando a construção de um ambiente de
+                trabalho mais saudável, seguro e produtivo para todos os
+                colaboradores.
               </p>
+
               <h3>2. Coleta de Dados</h3>
               <p>
-                Coletamos dados de saúde mental e física para fins de
-                diagnóstico organizacional. Seus dados individuais são
-                confidenciais e anonimizados antes de serem apresentados em
-                relatórios agregados para a empresa.
+                Utilizamos questionários e escalas validadas cientificamente
+                para o diagnóstico. As informações coletadas são utilizadas
+                exclusivamente para:
               </p>
-              <h3>3. Anonimização</h3>
+              <ul>
+                <li>Mapeamento de riscos psicossociais e estresse;</li>
+                <li>Recomendação de conteúdo educativo e preventivo;</li>
+                <li>
+                  Embasamento para ações de melhoria do ambiente de trabalho.
+                </li>
+              </ul>
+
+              <h3>4. Privacidade</h3>
               <p>
-                Garantimos que nenhum dado será exibido individualmente para o
-                seu empregador. Agrupamentos com menos de 5 pessoas não geram
-                relatórios visualizáveis para evitar identificação por
-                eliminação.
+                A confidencialidade é absoluta. Seus dados são anonimizados e o
+                acesso às respostas individuais é restrito exclusivamente aos
+                profissionais de saúde (médicos e psicólogos) da plataforma.
               </p>
-              <h3>4. Finalidade</h3>
               <p>
-                Os dados serão utilizados exclusivamente para:
-                <ul>
-                  <li>Mapeamento de riscos psicossociais.</li>
-                  <li>Recomendação de conteúdo educativo.</li>
-                  <li>Melhoria do ambiente de trabalho.</li>
-                </ul>
+                <strong>
+                  Em nenhuma hipótese seus dados individuais serão
+                  compartilhados com seu empregador.
+                </strong>{' '}
+                A empresa tem acesso apenas a relatórios estatísticos agregados,
+                que impedem a identificação pessoal.
               </p>
-              <h3>5. Seus Direitos</h3>
               <p>
-                Você pode revogar este consentimento a qualquer momento,
-                solicitar a exclusão de seus dados ou pedir uma cópia das
-                informações armazenadas.
+                Nossa atuação segue rigorosamente as diretrizes éticas e legais:
               </p>
-              <p>Role até o final para habilitar o botão de aceite...</p>
-              <div className="h-32"></div> {/* Spacer to force scroll */}
+              <ul>
+                <li>
+                  Código Internacional de Ética para Profissionais de Saúde
+                  Ocupacional;
+                </li>
+                <li>Código de Ética Médica (CFM);</li>
+                <li>Código de Ética Profissional do Psicólogo (CFP);</li>
+                <li>Lei Geral de Proteção de Dados (LGPD).</li>
+              </ul>
+
+              <div className="h-32"></div>
               <p className="font-bold text-primary">Fim do documento.</p>
             </div>
           </ScrollArea>
