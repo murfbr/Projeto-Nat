@@ -8,6 +8,7 @@ import {
   Library,
   Briefcase,
   Handshake,
+  FileText,
 } from 'lucide-react'
 import useUserStore from '@/stores/useUserStore'
 
@@ -29,9 +30,7 @@ export const Sidebar = ({ className }: SidebarProps) => {
 
   const partnerLinks = [
     { href: '/partner', label: 'Painel', icon: LayoutDashboard },
-    // Partner doesn't have other direct links as navigation is hierarchical from Dashboard,
-    // but we can add a direct link to the Dashboard which lists companies.
-    // The requirement says "Partner-Specific Sidebar... focused on company management"
+    { href: '/partner/reports', label: 'Relatórios', icon: FileText },
   ]
 
   const companyAdminLinks = [
@@ -57,7 +56,6 @@ export const Sidebar = ({ className }: SidebarProps) => {
             const Icon = link.icon
             // Strict check for partner dashboard to avoid highlighting on sub-routes if needed,
             // but usually we want highlight if we are inside that section.
-            // For partner, '/partner' is the root.
             const isActive =
               location.pathname === link.href ||
               (link.href !== '/' &&
@@ -74,7 +72,10 @@ export const Sidebar = ({ className }: SidebarProps) => {
 
             const activeState =
               role === 'partner'
-                ? link.href === '/partner' // Partner only has one main link for now
+                ? link.href === '/partner'
+                  ? location.pathname === '/partner' ||
+                    location.pathname.startsWith('/partner/company')
+                  : location.pathname.startsWith(link.href)
                 : isExactMatch || isSubRoute
 
             return (

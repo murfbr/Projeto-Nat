@@ -21,9 +21,30 @@ import { Input } from '@/components/ui/input'
 import {
   companies as allCompanies,
   partners as allPartners,
+  employees as allEmployees,
 } from '@/lib/mockData'
 import useUserStore from '@/stores/useUserStore'
-import { Building2, Search, ChevronRight, Briefcase, Users } from 'lucide-react'
+import {
+  Building2,
+  Search,
+  ChevronRight,
+  Briefcase,
+  FileBarChart,
+} from 'lucide-react'
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from 'recharts'
+import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart'
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8']
 
 export default function PartnerDashboard() {
   const { user } = useUserStore()
@@ -34,14 +55,42 @@ export default function PartnerDashboard() {
   const myCompanies = allCompanies.filter(
     (c) => c.partnerId === user?.partnerId,
   )
+  const myEmployees = allEmployees // In real app, filter employees belonging to myCompanies
+
+  // Analytics Logic
+  const pcdData = [
+    {
+      name: 'Não',
+      value: myEmployees.filter((e) => !e.pcdType || e.pcdType === 'Não')
+        .length,
+    },
+    {
+      name: 'Sim',
+      value: myEmployees.filter((e) => e.pcdType && e.pcdType !== 'Não').length,
+    },
+  ]
+
+  const lgbtData = [
+    { name: 'LGBT+', value: myEmployees.filter((e) => e.isLGBT).length },
+    { name: 'Não LGBT+', value: myEmployees.filter((e) => !e.isLGBT).length },
+  ]
+
+  const educationData = myEmployees.reduce(
+    (acc, curr) => {
+      const level = curr.educationLevel || 'Não informado'
+      const existing = acc.find((i) => i.name === level)
+      if (existing) existing.value++
+      else acc.push({ name: level, value: 1 })
+      return acc
+    },
+    [] as { name: string; value: number }[],
+  )
 
   const filteredCompanies = myCompanies.filter(
     (c) =>
       c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.cnpj.includes(searchTerm),
   )
-
-  const totalEmployees = 0 // In a real app we'd aggregate this from sectors/employees data
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -50,7 +99,8 @@ export default function PartnerDashboard() {
           Portal do Parceiro
         </h1>
         <p className="text-muted-foreground">
-          Bem-vindo, {user?.name}. Gerencie sua carteira de empresas clientes.
+          Bem-vindo, {user?.name}. Gerencie sua carteira de empresas e acompanhe
+          indicadores.
         </p>
       </div>
 
@@ -70,29 +120,147 @@ export default function PartnerDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Parceiro Responsável
+              População Total
             </CardTitle>
             <Briefcase className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold truncate">
-              {currentPartner?.name}
-            </div>
+            <div className="text-2xl font-bold">{myEmployees.length}</div>
             <p className="text-xs text-muted-foreground">
-              {currentPartner?.email}
+              Colaboradores monitorados
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card
+          className="cursor-pointer hover:bg-slate-50 transition-colors"
+          onClick={() => navigate('/partner/reports')}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Status da Conta
-            </CardTitle>
-            <ActivityIcon className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Relatórios</CardTitle>
+            <FileBarChart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">Ativa</div>
-            <p className="text-xs text-muted-foreground">Acesso regular</p>
+            <div className="text-2xl font-bold text-primary">Acessar</div>
+            <p className="text-xs text-muted-foreground">Central de Laudos</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="col-span-1">
+          <CardHeader>
+            <CardTitle className="text-base">Distribuição PCD</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[200px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pcdData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {pcdData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex justify-center gap-4 text-xs text-muted-foreground mt-2">
+              {pcdData.map((d, i) => (
+                <div key={i} className="flex items-center gap-1">
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: COLORS[i] }}
+                  />
+                  {d.name}: {d.value}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="col-span-1">
+          <CardHeader>
+            <CardTitle className="text-base">Diversidade LGBT+</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[200px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={lgbtData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {lgbtData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index + (2 % COLORS.length)]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex justify-center gap-4 text-xs text-muted-foreground mt-2">
+              {lgbtData.map((d, i) => (
+                <div key={i} className="flex items-center gap-1">
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: COLORS[i + 2] }}
+                  />
+                  {d.name}: {d.value}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="col-span-1 md:col-span-2 lg:col-span-1">
+          <CardHeader>
+            <CardTitle className="text-base">Nível de Escolaridade</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={{}} className="h-[200px] w-full">
+              <BarChart
+                data={educationData}
+                layout="vertical"
+                margin={{ left: 40 }}
+              >
+                <XAxis type="number" hide />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  width={100}
+                  tick={{ fontSize: 10 }}
+                />
+                <Tooltip
+                  cursor={{ fill: 'transparent' }}
+                  content={<ChartTooltipContent />}
+                />
+                <Bar
+                  dataKey="value"
+                  fill="hsl(var(--primary))"
+                  radius={[0, 4, 4, 0]}
+                  barSize={20}
+                />
+              </BarChart>
+            </ChartContainer>
           </CardContent>
         </Card>
       </div>
@@ -172,24 +340,5 @@ export default function PartnerDashboard() {
         </CardContent>
       </Card>
     </div>
-  )
-}
-
-function ActivityIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-    </svg>
   )
 }

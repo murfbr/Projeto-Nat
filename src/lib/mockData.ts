@@ -27,12 +27,19 @@ export interface Sector {
 export interface Employee {
   id: string
   name: string
+  socialName?: string
   email: string
   cpf: string
   role: string
+  isManager: boolean
   sectorId: string
   status: 'active' | 'inactive'
   photoUrl?: string
+  // Sociographic Data (Sensitive)
+  birthDate?: string
+  isLGBT?: boolean
+  educationLevel?: string
+  pcdType?: string
 }
 
 export type ContentScope = 'global' | 'partner' | 'company' | 'sector' | 'user'
@@ -49,6 +56,28 @@ export interface Content {
   visible: boolean
   scope: ContentScope
   targetId?: string
+}
+
+export interface QuestionnaireHistory {
+  id: string
+  employeeId: string
+  acronym: string
+  title: string
+  date: string
+  year: number
+  score: number
+  status: 'completed' | 'pending'
+}
+
+export interface Report {
+  id: string
+  partnerId: string
+  companyId: string
+  year: number
+  subcategory: string
+  title: string
+  url: string
+  createdAt: string
 }
 
 export const partners: Partner[] = [
@@ -114,22 +143,34 @@ export const employees: Employee[] = [
   {
     id: 'e1',
     name: 'Carlos Mendes',
+    socialName: 'Kaka Mendes',
     email: 'carlos@sulamerica.com.br',
     cpf: '123.456.789-00',
     role: 'Analista',
+    isManager: false,
     sectorId: 's1',
     status: 'active',
     photoUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=e1',
+    birthDate: '1990-05-15',
+    isLGBT: false,
+    educationLevel: 'Ensino Superior',
+    pcdType: 'Não',
   },
   {
     id: 'e2',
     name: 'Ana Souza',
+    socialName: 'Ana',
     email: 'ana@sulamerica.com.br',
     cpf: '234.567.890-11',
     role: 'Gerente',
+    isManager: true,
     sectorId: 's2',
     status: 'active',
     photoUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=e2',
+    birthDate: '1985-08-20',
+    isLGBT: true,
+    educationLevel: 'Pós-graduação',
+    pcdType: 'Não',
   },
   {
     id: 'e3',
@@ -137,19 +178,30 @@ export const employees: Employee[] = [
     email: 'roberto@sulamerica.com.br',
     cpf: '345.678.901-22',
     role: 'Assistente',
+    isManager: false,
     sectorId: 's3',
     status: 'inactive',
     photoUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=e3',
+    birthDate: '1995-02-10',
+    isLGBT: false,
+    educationLevel: 'Ensino Médio',
+    pcdType: 'Auditiva',
   },
   {
     id: 'u3', // Match the logged in mock user for testing
     name: 'Carlos Mendes',
+    socialName: 'Kaka',
     email: 'carlos@empresa.com',
     cpf: '123.123.123-12',
-    role: 'Employee',
+    role: 'Colaborador',
+    isManager: false,
     sectorId: 's1',
     status: 'active',
     photoUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=u3',
+    birthDate: '1992-11-25',
+    isLGBT: true,
+    educationLevel: 'Mestrado',
+    pcdType: 'Não',
   },
 ]
 
@@ -250,5 +302,61 @@ export const questions = [
       'Não, raramente',
       'Não, nunca',
     ],
+  },
+]
+
+export const questionnaireHistory: QuestionnaireHistory[] = [
+  {
+    id: 'h1',
+    employeeId: 'u3',
+    acronym: 'HSE-IT',
+    title: 'Indicador de Tensão Laboral',
+    date: '2024-01-15',
+    year: 2024,
+    score: 85,
+    status: 'completed',
+  },
+  {
+    id: 'h2',
+    employeeId: 'u3',
+    acronym: 'PROART',
+    title: 'Programa de Avaliação de Riscos',
+    date: '2023-11-20',
+    year: 2023,
+    score: 72,
+    status: 'completed',
+  },
+  {
+    id: 'h3',
+    employeeId: 'u3',
+    acronym: 'BURNOUT-S',
+    title: 'Escala de Burnout',
+    date: '2023-08-10',
+    year: 2023,
+    score: 45,
+    status: 'completed',
+  },
+]
+
+export const reports: Report[] = [
+  {
+    id: 'r1',
+    partnerId: 'p1',
+    companyId: 'c1',
+    year: 2024,
+    subcategory: 'Financeiro',
+    title: 'Laudo Psicossocial Financeiro Q1',
+    url: '#',
+    createdAt: '2024-03-01',
+  },
+  {
+    id: 'r2',
+    partnerId: 'p1',
+    companyId: 'c1',
+    year: 2023,
+    subcategory: 'Geral',
+    title: 'Relatório Anual Consolidado',
+    url: '#',
+    createdAt: '2023-12-20',
   },
 ]

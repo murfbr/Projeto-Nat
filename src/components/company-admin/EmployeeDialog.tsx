@@ -18,6 +18,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
@@ -30,12 +31,15 @@ import {
 import { sectors } from '@/lib/mockData'
 import { Upload, User } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Switch } from '@/components/ui/switch'
 
 const formSchema = z.object({
   name: z.string().min(2, 'Nome obrigatório'),
+  socialName: z.string().optional(),
   email: z.string().email('Email inválido'),
   role: z.string().min(2, 'Cargo obrigatório'),
   sectorId: z.string().min(1, 'Selecione um setor'),
+  isManager: z.boolean().default(false),
 })
 
 interface EmployeeDialogProps {
@@ -54,9 +58,11 @@ export function EmployeeDialog({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
+      socialName: '',
       email: '',
       role: '',
       sectorId: '',
+      isManager: false,
     },
   })
 
@@ -80,11 +86,11 @@ export function EmployeeDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Novo Colaborador</DialogTitle>
           <DialogDescription>
-            Preencha os dados para cadastrar um novo colaborador manualmente.
+            Preencha os dados para cadastrar um novo colaborador.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -120,19 +126,35 @@ export function EmployeeDialog({
               </div>
             </div>
 
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome Completo</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: João da Silva" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome Completo</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: João da Silva" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="socialName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome Social</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Opcional" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
               name="email"
@@ -146,6 +168,7 @@ export function EmployeeDialog({
                 </FormItem>
               )}
             />
+
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -190,6 +213,30 @@ export function EmployeeDialog({
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="isManager"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">
+                      Cargo de Liderança
+                    </FormLabel>
+                    <FormDescription>
+                      Marque se este colaborador é um gestor.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
             <DialogFooter>
               <Button type="submit">Cadastrar Colaborador</Button>
             </DialogFooter>

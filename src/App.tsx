@@ -30,11 +30,14 @@ import Employees from './pages/company-admin/Employees'
 import PartnerDashboard from './pages/partner/Dashboard'
 import PartnerCompanyView from './pages/partner/CompanyView'
 import PartnerSectorView from './pages/partner/SectorView'
+import PartnerReports from './pages/partner/Reports'
 
 // Employee Pages
 import EmployeeDashboard from './pages/employee/Dashboard'
 import Questionnaire from './pages/employee/Questionnaire'
 import Library from './pages/employee/Library'
+import MyData from './pages/employee/MyData'
+import History from './pages/employee/History'
 import { LGPDModal } from './components/auth/LGPDModal'
 
 const App = () => (
@@ -62,6 +65,7 @@ const App = () => (
           {/* Partner Routes */}
           <Route path="/partner" element={<PartnerLayout />}>
             <Route index element={<PartnerDashboard />} />
+            <Route path="reports" element={<PartnerReports />} />
             <Route path="company/:companyId" element={<PartnerCompanyView />} />
             <Route
               path="company/:companyId/sector/:sectorId"
@@ -81,6 +85,8 @@ const App = () => (
             <Route index element={<EmployeeDashboard />} />
             <Route path="questionnaire" element={<Questionnaire />} />
             <Route path="library" element={<Library />} />
+            <Route path="my-data" element={<MyData />} />
+            <Route path="history" element={<History />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

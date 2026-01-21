@@ -15,12 +15,25 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Upload, Download, FileSpreadsheet, Plus, UserPlus } from 'lucide-react'
+import {
+  Upload,
+  Download,
+  FileSpreadsheet,
+  Plus,
+  UserPlus,
+  Star,
+} from 'lucide-react'
 import { employees as mockEmployees, Employee, sectors } from '@/lib/mockData'
 import { EmployeeDialog } from '@/components/company-admin/EmployeeDialog'
 import { toast } from 'sonner'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 export default function Employees() {
   const [employees, setEmployees] = useState<Employee[]>(mockEmployees)
@@ -30,9 +43,11 @@ export default function Employees() {
     const newEmployee: Employee = {
       id: `e${Date.now()}`,
       name: data.name,
+      socialName: data.socialName,
       email: data.email,
       cpf: '000.000.000-00', // Mock CPF
       role: data.role,
+      isManager: data.isManager || false,
       sectorId: data.sectorId,
       status: 'active',
       photoUrl: data.photoUrl,
@@ -77,15 +92,28 @@ export default function Employees() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Colaborador</TableHead>
-                  <TableHead>Cargo/Setor</TableHead>
+                  <TableHead>Setor</TableHead>
+                  <TableHead>Cargo</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {employees.map((employee) => (
-                  <TableRow key={employee.id}>
+                  <TableRow
+                    key={employee.id}
+                    className={cn(
+                      employee.isManager &&
+                        'bg-yellow-50/50 hover:bg-yellow-50',
+                    )}
+                  >
                     <TableCell>
                       <div className="flex items-center gap-3">
+                        {employee.isManager && (
+                          <div
+                            className="w-1 h-8 bg-yellow-400 rounded-full mr-1"
+                            title="Gestor"
+                          />
+                        )}
                         <Avatar>
                           <AvatarImage src={employee.photoUrl} />
                           <AvatarFallback>
@@ -93,7 +121,22 @@ export default function Employees() {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium">{employee.name}</div>
+                          <div className="font-medium flex items-center gap-1">
+                            {employee.name}
+                            {employee.socialName && (
+                              <span className="text-xs text-muted-foreground font-normal italic">
+                                ({employee.socialName})
+                              </span>
+                            )}
+                            {employee.isManager && (
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500 ml-1" />
+                                </TooltipTrigger>
+                                <TooltipContent>Gestor</TooltipContent>
+                              </Tooltip>
+                            )}
+                          </div>
                           <div className="text-xs text-muted-foreground">
                             {employee.email}
                           </div>
@@ -101,10 +144,12 @@ export default function Employees() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm font-medium">{employee.role}</div>
-                      <div className="text-xs text-muted-foreground">
+                      <Badge variant="outline" className="font-normal">
                         {getSectorName(employee.sectorId)}
-                      </div>
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm">{employee.role}</div>
                     </TableCell>
                     <TableCell>
                       <Badge
